@@ -9,15 +9,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StatisticsService {
 
     public final TransacaoService transacaoService;
 
     public StatisticsResponseDTO calculateStatisticsTransactions(Integer intervaloBusca) {
+        log.info("Initializing find statistics and transactions for the period " + intervaloBusca);
         List<TransacaoRequestDTO> trasacoes = transacaoService.findTransactions(intervaloBusca);
 
         DoubleSummaryStatistics statisticsTransactions = transacoes.stream().mapToDouble(TransacaoRequestDTO::valor)
                 .summaryStatistics();
+        log.info("Statistics returned sucessfully");
         return new StatisticsResponseDTO(statisticsTransactions.getCount(), statisticsTransactions.getSum(),
                 statisticsTransactions.getAverage(), statisticsTransactions.getMin(), statisticsTransactions.getMax());
     }
