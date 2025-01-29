@@ -17,7 +17,9 @@ public class StatisticsService {
     public StatisticsResponseDTO calculateStatisticsTransactions(Integer intervaloBusca) {
         log.info("Initializing find statistics and transactions for the period " + intervaloBusca);
         List<TransacaoRequestDTO> trasacoes = transacaoService.findTransactions(intervaloBusca);
-
+        if(trasacoes.isEmpyt()) { 
+            return new StatisticsResponseDTO(0L, 0L, 0L, 0L, 0L);
+        }
         DoubleSummaryStatistics statisticsTransactions = transacoes.stream().mapToDouble(TransacaoRequestDTO::valor)
                 .summaryStatistics();
         log.info("Statistics returned sucessfully");
